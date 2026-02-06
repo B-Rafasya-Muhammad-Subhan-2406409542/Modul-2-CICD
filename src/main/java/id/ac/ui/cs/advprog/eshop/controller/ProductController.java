@@ -36,7 +36,7 @@ public class ProductController {
         return "productList";
     }
 
-    @GetMapping("/list/{productId}")
+    @GetMapping("/edit/{productId}")
     public String editProductPage(@PathVariable String productId, Model model){
         Product product = service.findById(productId);
         model.addAttribute("product", product);
