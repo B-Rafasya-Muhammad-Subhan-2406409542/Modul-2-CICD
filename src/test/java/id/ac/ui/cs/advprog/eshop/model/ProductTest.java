@@ -29,13 +29,13 @@ public class ProductTest {
     }
 
     @Test
-    void testGetProductNameNull() {
+    void testGetProductNameIfNull() {
         this.product.setProductName(null);
         assertNull(this.product.getProductName());
     }
 
     @Test
-    void testGetProductQuantityNegative() {
+    void testGetProductQuantityIfNegative() {
         this.product.setProductQuantity(-1);
         assertEquals(-1, product.getProductQuantity());
     }
