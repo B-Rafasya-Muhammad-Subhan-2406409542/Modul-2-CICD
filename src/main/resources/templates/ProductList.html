@@ -24,8 +24,11 @@
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productQuantity}"></td>
             <td>
-                <a th:href="@{/product/edit/{id}(id=${product.productId})}" class="btn btn-sm btn-primary">Edit</a>
-                <a th:href="@{/product/delete/{id}(id=${product.productId})}" class="btn btn-sm btn-danger">Delete</a>
+                <a th:href="@{/product/edit/{id}(id=${product.productId})}" class="btn btn-sm btn-primary mr-2">Edit</a>
+                <form th:action="@{/product/delete}" method="post" class="d-inline">
+                    <input type="hidden" name="productId" th:value="${product.productId}" />
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
             </td>
         </tr>
         </tbody>
