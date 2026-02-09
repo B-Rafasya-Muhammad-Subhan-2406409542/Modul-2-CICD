@@ -65,4 +65,57 @@ public class ProductRepositoryTest {
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
     }
+
+    @Test
+    void testEditProduct() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product editProduct = new Product();
+        editProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        editProduct.setProductName("Sampo Cap Modo");
+        editProduct.setProductQuantity(50);
+
+        Product updatedProduct = productRepository.update(editProduct);
+
+        assertEquals(editProduct.getProductId(), updatedProduct.getProductId());
+        assertEquals(editProduct.getProductName(), updatedProduct.getProductName());
+        assertEquals(editProduct.getProductQuantity(), updatedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testEditProductNotFound() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+
+        Product result = productRepository.update(product);
+        assertNull(result);
+    }
+
+    @Test
+    void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        productRepository.delete(product.getProductId());
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteProductNotFound() {
+        productRepository.delete("random-id");
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertFalse(productIterator.hasNext());
+    }
 }
