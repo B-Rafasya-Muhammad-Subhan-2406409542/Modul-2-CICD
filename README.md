@@ -36,3 +36,27 @@ Saya telah memperbaiki kode tersebut dengan mengubah metodenya menjadi `POST`:
     </form>
     ```
 Perubahan ini memastikan fitur hapus berjalan sesuai standar protokol HTTP dan lebih aman dari serangan CSRF sederhana.
+
+## Reflection 2
+Setelah menulis Unit Test, saya merasa lebih percaya diri dengan kualitas kode saya. Unit test bertindak sebagai pengaman yang memastikan bahwa setiap bagian kecil (unit) dari logika aplikasi berjalan sesuai harapan, terutama untuk skenario-skenario tepi (*edge cases*) yang mungkin terlewat saat pengujian manual.
+
+Mengenai jumlah unit test dalam satu class, tidak ada angka pasti. Jumlah tes harus cukup untuk mencakup
+1.  **Positive Scenarios**
+2.  **Negative Scenarios**
+3.  **Edge Cases**
+
+Untuk memastikan unit test sudah cukup, kita bisa menggunakan **Code Coverage**. Namun, 100% Code Coverage tidak menjamin kode bebas dari bug atau error.
+Code coverage hanya memastikan baris kode tersebut *pernah dijalankan*, tetapi tidak menjamin kebenaran logika bisnisnya.
+Code coverage mungkin tidak mendeteksi bug yang disebabkan oleh kesalahan pemahaman requirement sistem.
+
+Jika saya membuat functional test baru untuk memverifikasi jumlah item dalam daftar produk dengan cara menyalin (*copy-paste*) prosedur setup dan variabel instance yang sama dari `CreateProductFunctionalTest.java`, menurut saya itu akan menurunkan kualitas kode.
+
+Masalah *Clean Code* yang terjadi adalah **Code Duplication**. Ini melanggar prinsip **DRY (Don't Repeat Yourself)**.
+
+Saya menduplikasi konfigurasi setup seperti `@LocalServerPort`, `@Value base url`, dan method `@BeforeEach setup` ke dalam class baru. Jika di masa depan saya perlu mengubah logika setup (misalnya mengganti port atau konfigurasi base URL), saya harus mengubahnya di semua file test satu per satu. Ini tidak efisien dan rentan kesalahan (*error-prone*).
+
+
+Solusi yang lebih bersih adalah dengan membuat **Base Test Class** (Inheritance).
+1.  Buat satu class induk (misalnya `BaseFunctionalTest`) yang berisi semua konfigurasi umum (setup port, base URL, inisialisasi driver).
+2.  Class test lainnya (`CreateProductFunctionalTest`, `ProductListFunctionalTest`, dll) cukup melakukan **extends** ke class induk tersebut.
+3.  Dengan begitu, kode setup hanya ditulis satu kali dan bisa digunakan kembali, membuat kode lebih rapi dan mudah di-maintain.
