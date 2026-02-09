@@ -27,4 +27,16 @@ public class ProductTest {
     void testGetProductQuantity() {
         assertEquals(100, product.getProductQuantity());
     }
+
+    @Test
+    void testGetProductNameNull() {
+        this.product.setProductName(null);
+        assertNull(this.product.getProductName());
+    }
+
+    @Test
+    void testGetProductQuantityNegative() {
+        this.product.setProductQuantity(-1);
+        assertEquals(-1, product.getProductQuantity());
+    }
 }
