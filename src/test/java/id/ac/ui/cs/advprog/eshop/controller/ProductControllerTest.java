@@ -79,8 +79,8 @@ class ProductControllerTest {
     @Test
     void testDeleteProduct() {
         String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
-        String viewName = productController.deleteProduct(productId, model);
+        String viewName = productController.deleteProduct(productId);
 
-        assertEquals("redirect:../list", viewName);
+        assertEquals("redirect:list", viewName);
     }
 }
