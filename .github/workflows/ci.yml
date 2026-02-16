@@ -2,12 +2,18 @@ name: Continuous Integration (CI)
 
 on:
   push:
+    branches:
+      - main
+      - module-2-exercise
   pull_request:
+    branches:
+      - main
+      - module-2-exercise
 
 jobs:
   test:
-    name: Run tests
-    runs-on: ubuntu-22.04
+    name: Run tests and Analyze
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the Git repository
         uses: actions/checkout@v4
@@ -24,18 +30,15 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
-            path: ~/.sonar/cache
-            key: ${{ runner.os }}-sonar
-            restore-keys: ${{ runner.os }}-sonar
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-
-      - name: Run unit tests
-        run: ./gradlew test
 
       - name: Build and analyze with SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
+        run: ./gradlew build sonar --info
