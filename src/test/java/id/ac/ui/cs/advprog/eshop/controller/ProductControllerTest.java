@@ -23,6 +23,7 @@ class ProductControllerTest {
     @Mock
     ProductService productService;
 
+    private static final String REDIRECT_LIST = "redirect:list";
     private Model model;
 
     @BeforeEach
@@ -34,7 +35,7 @@ class ProductControllerTest {
     void testCreateProductPage() {
         String viewName = productController.createProductPage(model);
 
-        assertEquals("createProduct", viewName);
+        assertEquals("CreateProduct", viewName);
         assertTrue(model.containsAttribute("product"));
         assertInstanceOf(Product.class, model.getAttribute("product"));
     }
@@ -44,7 +45,7 @@ class ProductControllerTest {
         Product product = new Product();
         String viewName = productController.createProductPost(product, model);
 
-        assertEquals("redirect:list", viewName);
+        assertEquals(REDIRECT_LIST, viewName);
     }
 
     @Test
@@ -52,7 +53,7 @@ class ProductControllerTest {
         when(productService.findAll()).thenReturn(mock(List.class));
         String viewName = productController.productListPage(model);
 
-        assertEquals("productList", viewName);
+        assertEquals("ProductList", viewName);
         assertTrue(model.containsAttribute("products"));
     }
 
@@ -64,7 +65,7 @@ class ProductControllerTest {
         when(productService.findById(productId)).thenReturn(product);
         String viewName = productController.editProductPage(productId, model);
 
-        assertEquals("editProduct", viewName);
+        assertEquals("EditProduct", viewName);
         assertEquals(product, model.getAttribute("product"));
     }
 
@@ -73,7 +74,7 @@ class ProductControllerTest {
         Product product = new Product();
         String viewName = productController.editProductPost(product, model);
 
-        assertEquals("redirect:list", viewName);
+        assertEquals(REDIRECT_LIST, viewName);
     }
 
     @Test
@@ -81,6 +82,6 @@ class ProductControllerTest {
         String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
         String viewName = productController.deleteProduct(productId);
 
-        assertEquals("redirect:list", viewName);
+        assertEquals(REDIRECT_LIST, viewName);
     }
 }
