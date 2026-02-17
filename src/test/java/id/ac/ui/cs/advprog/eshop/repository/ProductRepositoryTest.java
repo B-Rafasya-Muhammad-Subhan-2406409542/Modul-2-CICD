@@ -18,6 +18,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        // Setup method intentionally empty for module purpose
     }
 
     @Test
