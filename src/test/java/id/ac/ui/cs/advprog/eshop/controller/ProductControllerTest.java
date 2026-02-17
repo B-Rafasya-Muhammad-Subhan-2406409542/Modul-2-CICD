@@ -34,7 +34,7 @@ class ProductControllerTest {
     void testCreateProductPage() {
         String viewName = productController.createProductPage(model);
 
-        assertEquals("createProduct", viewName);
+        assertEquals("CreateProduct", viewName);
         assertTrue(model.containsAttribute("product"));
         assertInstanceOf(Product.class, model.getAttribute("product"));
     }
@@ -52,7 +52,7 @@ class ProductControllerTest {
         when(productService.findAll()).thenReturn(mock(List.class));
         String viewName = productController.productListPage(model);
 
-        assertEquals("productList", viewName);
+        assertEquals("ProductList", viewName);
         assertTrue(model.containsAttribute("products"));
     }
 
@@ -64,7 +64,7 @@ class ProductControllerTest {
         when(productService.findById(productId)).thenReturn(product);
         String viewName = productController.editProductPage(productId, model);
 
-        assertEquals("editProduct", viewName);
+        assertEquals("EditProduct", viewName);
         assertEquals(product, model.getAttribute("product"));
     }
 
