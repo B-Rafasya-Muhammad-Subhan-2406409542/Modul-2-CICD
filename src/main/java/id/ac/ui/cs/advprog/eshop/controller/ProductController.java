@@ -7,14 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 @Controller
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductService service;
+    private final ProductService service;
 
     @GetMapping("/create")
     public String createProductPage(Model model){
@@ -40,7 +42,7 @@ public class ProductController {
     public String editProductPage(@PathVariable String productId, Model model){
         Product product = service.findById(productId);
         model.addAttribute("product", product);
-        return "editProduct";
+        return "EditProduct";
     }
 
     @PostMapping("/edit")
