@@ -60,3 +60,32 @@ Solusi yang lebih bersih adalah dengan membuat **Base Test Class** (Inheritance)
 1.  Buat satu class induk (misalnya `BaseFunctionalTest`) yang berisi semua konfigurasi umum (setup port, base URL, inisialisasi driver).
 2.  Class test lainnya (`CreateProductFunctionalTest`, `ProductListFunctionalTest`, dll) cukup melakukan **extends** ke class induk tersebut.
 3.  Dengan begitu, kode setup hanya ditulis satu kali dan bisa digunakan kembali, membuat kode lebih rapi dan mudah di-maintain.
+
+## Reflection 2
+
+### 1. Evaluasi Code Quality
+Selama proses pengerjaan modul ini dan integrasi dengan SonarCloud, saya menemukan dan memperbaiki beberapa isu terkait kualitas kode (Code Quality) serta meningkatkan pengujian agar memenuhi standar *clean code*:
+
+* Saya menemukan adanya *unused import* di dalam `ProductServiceImpl.java`. Strategi saya adalah menghapusnya karena import yang tidak digunakan akan menambah *cognitive load* bagi developer lain yang membaca kode, serta berpotensi menimbulkan kebingungan atau konflik di masa depan.
+* Pada file `ProductControllerTest.java`, string `"redirect:list"` digunakan secara berulang kali. SonarCloud mendeteksinya sebagai *code smell*. Strategi saya adalah mengekstrak string tersebut menjadi sebuah konstanta `private static final String REDIRECT_LIST = "redirect:list";` sehingga kode lebih rapi dan meminimalisir kesalahan pengetikan (*typo*).
+* Terdapat ketidaksesuaian penulisan antara nama file HTML (PascalCase, contoh: `CreateProduct.html`) dengan string yang dikembalikan atau diuji di Controller Test (camelCase, contoh: `createProduct`). Saya menyesuaikan unit test agar mengekspektasikan *PascalCase* yang benar, sehingga tidak terjadi *error* pada saat Spring Boot mencoba merender halaman.
+* Saya menghapus karakter *backtick* ( \` ) yang terselip pada *hash integrity* Bootstrap di `CreateProduct.html` yang merusak CSS, serta memperbaiki teks *placeholder* yang salah (*copy-paste error*).
+
+Strategi utama saya dalam memperbaiki kode adalah dengan membaca log dari SonarCloud dan GitHub Actions secara teliti, memahami akar masalahnya (apakah itu *logic error* atau *code smell*), lalu memperbaikinya secara bertahap di branch terpisah (`module-2-exercise`) sebelum melakukan *merge*.
+
+**Peningkatan Code Coverage:**
+
+Saya berhasil meningkatkan *code coverage* secara signifikan pada beberapa komponen utama aplikasi dengan melengkapi *unit test*. Peningkatan tersebut meliputi:
+* `ProductController`: dari 9% menjadi 100%
+* `ProductService`: dari 6% menjadi 100%
+* `ProductRepository`: dari 70% menjadi 100%
+* `EshopApplication` (main class): dari 37% menjadi 100%
+
+### 2. Evaluasi Implementasi CI/CD
+Menurut saya, *workflows* GitHub Actions yang telah saya implementasikan pada proyek ini sudah memenuhi definisi *Continuous Integration* (CI) dan *Continuous Deployment* (CD).
+
+**Mengapa memenuhi Continuous Integration (CI)?**
+Saya telah mengonfigurasi *workflow* yang secara otomatis berjalan setiap kali ada *push* atau *pull request* ke repositori. *Workflow* ini melakukan kompilasi, menjalankan *unit test* menggunakan Gradle (JaCoCo), serta melakukan analisis kualitas dan keamanan kode menggunakan SonarCloud dan OSSF Scorecard. Hal ini memastikan bahwa setiap perubahan baru selalu diuji dan divalidasi secara otomatis, sehingga *bug* dapat dideteksi sejak dini sebelum digabungkan ke *branch* utama.
+
+**Mengapa memenuhi Continuous Deployment (CD)?**
+Saya juga telah membuat file `Dockerfile` dan menyiapkan mekanisme *pull-based deployment*. Dalam skenario ideal, setiap kali ada perubahan yang di-*merge* ke branch `main`, layanan PaaS (seperti Koyeb atau Render) akan mendeteksi perubahan tersebut dan secara otomatis mem-build *image* Docker serta melakukan *deployment* ke *server production*. Ini menghapus kebutuhan untuk merilis aplikasi secara manual. Meskipun pada praktiknya saat ini saya mengalami kendala teknis terkait verifikasi *billing* (kartu kredit) dari pihak *cloud provider* yang memblokir proses *live deployment*, arsitektur dan *pipeline* CD-nya sendiri sudah terkonfigurasi dan siap berjalan.
