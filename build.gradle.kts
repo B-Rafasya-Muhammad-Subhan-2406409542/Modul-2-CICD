@@ -55,6 +55,7 @@ sonar {
         property("sonar.projectKey", "B-Rafasya-Muhammad-Subhan-2406409542_Modul-2-CICD")
         property("sonar.organization", "b-rafasya-muhammad-subhan-2406409542")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -86,6 +87,10 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 tasks.withType<Test>().configureEach {
