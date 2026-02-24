@@ -62,6 +62,7 @@ Solusi yang lebih bersih adalah dengan membuat **Base Test Class** (Inheritance)
 3.  Dengan begitu, kode setup hanya ditulis satu kali dan bisa digunakan kembali, membuat kode lebih rapi dan mudah di-maintain.
 
 ## Reflection 2
+**Live Deployment Koyeb:** nutty-jerrie-rafasya-org-bee1affd.koyeb.app/
 
 ### 1. Evaluasi Code Quality
 Selama proses pengerjaan modul ini dan integrasi dengan SonarCloud, saya menemukan dan memperbaiki beberapa isu terkait kualitas kode (Code Quality) serta meningkatkan pengujian agar memenuhi standar *clean code*:
@@ -70,6 +71,7 @@ Selama proses pengerjaan modul ini dan integrasi dengan SonarCloud, saya menemuk
 * Pada file `ProductControllerTest.java`, string `"redirect:list"` digunakan secara berulang kali. SonarCloud mendeteksinya sebagai *code smell*. Strategi saya adalah mengekstrak string tersebut menjadi sebuah konstanta `private static final String REDIRECT_LIST = "redirect:list";` sehingga kode lebih rapi dan meminimalisir kesalahan pengetikan (*typo*).
 * Terdapat ketidaksesuaian penulisan antara nama file HTML (PascalCase, contoh: `CreateProduct.html`) dengan string yang dikembalikan atau diuji di Controller Test (camelCase, contoh: `createProduct`). Saya menyesuaikan unit test agar mengekspektasikan *PascalCase* yang benar, sehingga tidak terjadi *error* pada saat Spring Boot mencoba merender halaman.
 * Saya menghapus karakter *backtick* ( \` ) yang terselip pada *hash integrity* Bootstrap di `CreateProduct.html` yang merusak CSS, serta memperbaiki teks *placeholder* yang salah (*copy-paste error*).
+* SonarCloud mendeteksi penggunaan modifier `public` yang tidak perlu di dalam interface `ProductService.java`. Secara *default*, semua method di dalam interface Java sudah bersifat `public`. Strategi saya adalah menghapus kata kunci `public` tersebut agar kode lebih bersih dan ringkas.
 
 Strategi utama saya dalam memperbaiki kode adalah dengan membaca log dari SonarCloud dan GitHub Actions secara teliti, memahami akar masalahnya (apakah itu *logic error* atau *code smell*), lalu memperbaikinya secara bertahap di branch terpisah (`module-2-exercise`) sebelum melakukan *merge*.
 
@@ -88,4 +90,4 @@ Menurut saya, *workflows* GitHub Actions yang telah saya implementasikan pada pr
 Saya telah mengonfigurasi *workflow* yang secara otomatis berjalan setiap kali ada *push* atau *pull request* ke repositori. *Workflow* ini melakukan kompilasi, menjalankan *unit test* menggunakan Gradle (JaCoCo), serta melakukan analisis kualitas dan keamanan kode menggunakan SonarCloud dan OSSF Scorecard. Hal ini memastikan bahwa setiap perubahan baru selalu diuji dan divalidasi secara otomatis, sehingga *bug* dapat dideteksi sejak dini sebelum digabungkan ke *branch* utama.
 
 **Mengapa memenuhi Continuous Deployment (CD)?**
-Saya juga telah membuat file `Dockerfile` dan menyiapkan mekanisme *pull-based deployment*. Dalam skenario ideal, setiap kali ada perubahan yang di-*merge* ke branch `main`, layanan PaaS (seperti Koyeb atau Render) akan mendeteksi perubahan tersebut dan secara otomatis mem-build *image* Docker serta melakukan *deployment* ke *server production*. Ini menghapus kebutuhan untuk merilis aplikasi secara manual. Meskipun pada praktiknya saat ini saya mengalami kendala teknis terkait verifikasi *billing* (kartu kredit) dari pihak *cloud provider* yang memblokir proses *live deployment*, arsitektur dan *pipeline* CD-nya sendiri sudah terkonfigurasi dan siap berjalan.
+Saya juga telah membuat file `Dockerfile` dan menyiapkan mekanisme *pull-based deployment* menggunakan layanan PaaS Koyeb. Setiap kali ada perubahan kode yang di-*merge* ke branch `main`, Koyeb akan mendeteksi perubahan tersebut secara otomatis, mem-*build* image Docker, dan langsung melakukan *deployment* ke server *production*. Rantai otomatisasi ini berhasil menghapus kebutuhan untuk merilis aplikasi secara manual, mempercepat siklus rilis, dan memastikan bahwa versi terbaru di repositori selalu tersinkronisasi dengan yang ada di *live server*.
