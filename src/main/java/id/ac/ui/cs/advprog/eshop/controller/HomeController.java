@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String createHomePage() {
-        return "home"; // Ini akan mencari file home.html
+        return "Home";
     }
 }
